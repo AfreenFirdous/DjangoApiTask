@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'TestApi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql', # 
+        'ENGINE': 'django.db.backends.postgresql', #
         'NAME': 'postgres',
         'USER': 'user1',
         'PASSWORD': 'user@123',
@@ -90,6 +90,12 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

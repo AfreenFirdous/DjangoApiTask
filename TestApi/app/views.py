@@ -1,20 +1,23 @@
 import requests
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from app.serializers import CryptoPriceSerializer
 from app.models import CryptoPrice
 from django.utils import timezone
 import os
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 def pull_crypto_data():
     API_KEY = os.getenv("API_KEY")
     url = f'https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=BTC&to_currency=USD&interval=60min&apikey={API_KEY}'
     r = requests.get(url)
     data = r.json()
-    print(data)
     return data
 
-@api_view() 
+@api_view(['GET']) 
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def exchange_rates(request):
     if request.method == 'GET':
         crypto_data = pull_crypto_data()
@@ -60,5 +63,4 @@ def crypto_currencies(request):
             "created_on": data['6. Last Refreshed']
         }
         return Response({'Exchange Rate':result})
-
 
